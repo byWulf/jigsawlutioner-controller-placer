@@ -1,0 +1,16 @@
+{
+  "name": "jigsawlutioner-controller-placer",
+  "version": "1.0.0",
+  "description": "Placer station, that can place the pieces onto the board",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byWulf/jigsawlutioner-controller-placer.git"
+  },
+  "author": "byWulf",
+  "license": "MIT",
+  "main": "index.js",
+  "dependencies": {
+    "jigsawlutioner-controller": "^2.0"
+  }
+}
