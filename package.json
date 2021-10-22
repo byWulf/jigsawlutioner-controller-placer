@@ -11,6 +11,6 @@
   "license": "MIT",
   "main": "index.js",
   "dependencies": {
-    "jigsawlutioner-controller": "^2.2"
+    "jigsawlutioner-controller": "^3.0"
   }
 }
