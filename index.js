@@ -14,7 +14,7 @@ controller.createEndpoint('reset', async (parameters, resolve) => {
     await Promise.all([
         controller.resetMotor(moveMotor, BrickPi.utils.RESET_MOTOR_LIMIT.BACKWARD_LIMIT, 50),
         controller.resetMotor(boardMotor, BrickPi.utils.RESET_MOTOR_LIMIT.BACKWARD_LIMIT, 80),
-        controller.resetMotor(plateMotor, BrickPi.utils.RESET_MOTOR_LIMIT.BACKWARD_LIMIT, 30),
+        controller.resetMotor(plateMotor, BrickPi.utils.RESET_MOTOR_LIMIT.BACKWARD_LIMIT, 50),
     ]);
 });
 
@@ -31,10 +31,13 @@ controller.createEndpoint('place', async (parameters, resolve) => {
         throw new Error('Parameter "plateOffset" was missing from the call.');
     }
 
-    const targetPlatePosition = getPlateOffset(parameters.plateOffset);
+    let targetPlatePosition = getPlateOffset(parameters.plateOffset);
     const targetBoardPosition = getBoardOffset(parameters.boardOffset);
+    const movePlateBackwards = targetPlatePosition > 500;
 
-    await moveMotor.setLimits(0, 800);
+    if (movePlateBackwards) {
+        targetPlatePosition += 100;
+    }
 
     await Promise.all([
         (async () => {
@@ -55,14 +58,10 @@ controller.createEndpoint('place', async (parameters, resolve) => {
         boardMotor.setPosition(targetBoardPosition),
     ]);
 
-    if (targetPlatePosition > 500) {
-        await plateMotor.setPosition(Math.max(targetPlatePosition - 500, 0));
-    } else {
-        await plateMotor.setPosition(Math.max(targetPlatePosition + 500, 0));
-    }
-    await pushMotor.setPosition(0);
+    await plateMotor.setPosition(Math.max(targetPlatePosition + (movePlateBackwards ? -500 : 500), 0));
 
     await Promise.all([
+        pushMotor.setPosition(0),
         plateMotor.setPosition(0),
         moveMotor.setPosition(500),
     ]);
