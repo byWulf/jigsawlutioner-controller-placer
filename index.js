@@ -74,6 +74,18 @@ controller.createEndpoint('place', async (parameters, resolve) => {
     ]);
 });
 
+controller.createEndpoint('move-board', async (parameters, resolve) => {
+    const boardMotor = await controller.getMotor(parameters, 'boardMotor');
+
+    if (typeof parameters.boardOffset === 'undefined') {
+        throw new Error('Parameter "boardOffset" was missing from the call.');
+    }
+
+    const targetBoardPosition = getBoardOffset(parameters.boardOffset);
+
+    await boardMotor.setPosition(targetBoardPosition);
+});
+
 async function movePieceToCliff(moveMotor, pushMotor, offset) {
     const offsetToMiddle = 70;
     const cmPerTeeth = 3.2 / 10; //https://www.brickowl.com/catalog/lego-gear-rack-4-3743
