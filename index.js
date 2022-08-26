@@ -84,6 +84,7 @@ controller.createEndpoint('move-board', async (parameters, resolve) => {
     const targetBoardPosition = getBoardOffset(parameters.boardOffset);
 
     await boardMotor.setPosition(targetBoardPosition);
+    await boardMotor.setPower(0);
 });
 
 async function movePieceToCliff(moveMotor, pushMotor, offset) {
